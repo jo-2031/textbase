@@ -4,6 +4,16 @@ import requests
 import time
 import typing
 import traceback
+from dotenv import load_dotenv
+import streamlit as st
+from PyPDF2 import PdfReader
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chains.question_answering import load_qa_chain
+from langchain.llms import OpenAI
+from langchain.callbacks import get_openai_callback     
+
 
 from textbase import Message
 
@@ -144,3 +154,29 @@ class BotLibre:
         message = data['message']
 
         return message
+    
+
+    class Langchain:
+        openai_ai_api_key=None
+        api_key={}
+
+        @classmethod
+        def generate(
+            cls,
+            system_prompt: str,
+            message_history: list[Message],
+            model="gpt-3.5-turbo",
+            max_tokens=3000,
+            temperature=0.7,
+        ):
+            assert cls.api_key is not None, "OpenAI API key is not set."
+            openai.api_key = cls.api_key
+
+            filtered_messages = []
+
+            for message in message_history:
+                #list of all the contents inside a single message
+                contents = get_contents(message, "STRING")
+                if contents:
+                    filtered_messages.extend(contents)
+               
