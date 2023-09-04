@@ -11,7 +11,7 @@ from textbase import bot, Message
 from typing import List
 
 # Configure logging
-openai_api_key = "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"
+openai_api_key = ""
 
 pdf = "paper27.pdf"
 
